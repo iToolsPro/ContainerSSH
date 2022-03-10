@@ -36,6 +36,8 @@ import (
 type authHandler struct {
 }
 
+CNT := 0
+
 // swagger:operation POST /password Authentication authPassword
 //
 // Password authentication
@@ -55,10 +57,17 @@ func (a *authHandler) OnPassword(Username string, _ []byte, _ string, _ string) 
 	bool,
 	error,
 ) {
-	if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1" ||
-		Username == "foo" ||
-		Username == "busybox" {
+	if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "0" {
+		return false, nil
+	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1"{
 		return true, nil
+	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "2"{
+		CNT += 1
+		if CNT == 20 || Username == "foo" || Username == "busybox" {
+			CNT = 0
+			return true, nil
+		}
+		return false, nil
 	}
 	return false, nil
 }
