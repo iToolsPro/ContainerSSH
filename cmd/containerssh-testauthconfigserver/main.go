@@ -36,7 +36,7 @@ import (
 type authHandler struct {
 }
 
-CNT := 0
+var CNT int
 
 // swagger:operation POST /password Authentication authPassword
 //
@@ -62,8 +62,8 @@ func (a *authHandler) OnPassword(Username string, _ []byte, _ string, _ string) 
 	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1"{
 		return true, nil
 	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "2"{
-		CNT += 1
-		if CNT == 20 || Username == "foo" || Username == "busybox" {
+		CNT = CNT + 1
+		if CNT == 20 {
 			CNT = 0
 			return true, nil
 		}
@@ -98,6 +98,9 @@ func (a *authHandler) OnPubKey(Username string, _ string, _ string, _ string) (
 }
 
 type configHandler struct {
+}
+func init(){
+	CNT = 0
 }
 
 // swagger:operation POST /config Configuration getUserConfiguration
