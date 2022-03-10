@@ -63,7 +63,7 @@ func (a *authHandler) OnPassword(Username string, _ []byte, _ string, _ string) 
 		return true, nil
 	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "2"{
 		CNT = CNT + 1
-		if CNT == 20 {
+		if CNT >= 20 {
 			CNT = 0
 			return true, nil
 		}
