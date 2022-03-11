@@ -19,6 +19,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	goHttp "net/http"
 	"os"
 	"os/signal"
@@ -57,19 +58,19 @@ func (a *authHandler) OnPassword(Username string, _ []byte, _ string, _ string) 
 	bool,
 	error,
 ) {
+	println(fmt.Sprintf("Mod is: %s, CNT is: %d, Username is: %s", os.Getenv("CONTAINERSSH_ALLOW_ALL"), CNT+1, Username))
 	if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "0" {
 		return false, nil
-	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1"{
+	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1" {
 		return true, nil
-	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "2"{
+	} else {
 		CNT = CNT + 1
-		if CNT >= 20 {
+		if CNT >= 20 || Username == "foo" {
 			CNT = 0
 			return true, nil
 		}
 		return false, nil
 	}
-	return false, nil
 }
 
 // swagger:operation POST /pubkey Authentication authPubKey
@@ -99,7 +100,8 @@ func (a *authHandler) OnPubKey(Username string, _ string, _ string, _ string) (
 
 type configHandler struct {
 }
-func init(){
+
+func init() {
 	CNT = 0
 }
 
