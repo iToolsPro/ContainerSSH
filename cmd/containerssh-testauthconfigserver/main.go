@@ -58,7 +58,7 @@ func (a *authHandler) OnPassword(Username string, _ []byte, _ string, _ string) 
 	bool,
 	error,
 ) {
-	println(fmt.Sprintf("Mod is: %s, CNT is: %d, Username is: %s", os.Getenv("CONTAINERSSH_ALLOW_ALL"), CNT+1, Username))
+	println(fmt.Sprintf("[OnPassword] Mod is: %s, CNT is: %d, Username is: %s", os.Getenv("CONTAINERSSH_ALLOW_ALL"), CNT+1, Username))
 	if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "0" {
 		return false, nil
 	} else if os.Getenv("CONTAINERSSH_ALLOW_ALL") == "1" {
@@ -92,6 +92,7 @@ func (a *authHandler) OnPubKey(Username string, _ string, _ string, _ string) (
 	bool,
 	error,
 ) {
+	println(fmt.Sprintf("[OnPubKey] Username: %s", Username))
 	if Username == "foo" || Username == "busybox" {
 		return true, nil
 	}
@@ -122,7 +123,7 @@ func init() {
 
 func (c *configHandler) OnConfig(request configuration.ConfigRequest) (configuration.AppConfig, error) {
 	config := configuration.AppConfig{}
-
+	println(fmt.Sprintf("[OnConfig] Username: %s", request.Username))
 	if request.Username == "busybox" {
 		config.DockerRun.Config.ContainerConfig = &container.Config{}
 		config.DockerRun.Config.ContainerConfig.Image = "busybox"
