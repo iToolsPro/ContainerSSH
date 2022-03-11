@@ -93,9 +93,9 @@ func (a *authHandler) OnPubKey(Username string, _ string, _ string, _ string) (
 	error,
 ) {
 	println(fmt.Sprintf("[OnPubKey] Username: %s", Username))
-	if Username == "foo" || Username == "busybox" {
-		return true, nil
-	}
+	//if Username == "foo" || Username == "busybox" {
+	//	return true, nil
+	//}
 	return false, nil
 }
 
